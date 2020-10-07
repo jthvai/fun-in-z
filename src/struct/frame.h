@@ -7,9 +7,17 @@
 
 #include "avl.h"
 
-struct avl **init_frame();
-int parse_inf(struct avl **frame, const uint32 seed, const char *fn);
+/*!
+ * Width of the frame, an AVL matrix.
+ *
+ * \def FRAME_WIDTH
+ */
+#define FRAME_WIDTH 64
 
-struct datum *get_by_name(struct avl **frame, const uint32 seed,
+struct avl **init_frame();
+void parse_inf(struct avl **frame, const uint32 seed[], const char *fn);
+
+struct datum *get_by_name(struct avl **frame, const uint32 seed[],
                           char name[]);
-int *add_datum(struct avl **frame, const uint32 seed, struct datum datum);
+struct avl **add_datum(struct avl **frame, const uint32 seed[],
+                       struct datum datum);

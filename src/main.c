@@ -2,6 +2,14 @@
 
 #include "main.h"
 
+/*!
+ * Main process of the program.
+ *
+ * \param argc Number of arguments
+ * \param argv Array of argumet strings
+ * \return `EXIT_SUCCESS` (0) if the process terminated without error,
+ *         `EXIT_FAILURE` (1) otherwise
+ */
 int main(int argc, char *const argv[]) {
   int16 opt;
   enum {INTERACTIVE, CONVHULL, DIJKSTRA} mode = INTERACTIVE;
@@ -47,9 +55,18 @@ int main(int argc, char *const argv[]) {
   }
 }
 
+/*!
+ * Presents an interactive shell.
+ *
+ * \param argc Number of arguments of `main()`
+ * \param argv Array of argumet strings of `main()`
+ * \param optind Index of the first non-option argument of `main()`
+ */
 void repl(int argc, char *const argv[], int optind) {
   srand((unsigned) time(NULL));
-  const uint32 seed = (const uint32) rand();
+  const uint32 seed[] = {(const uint32) rand() % NAME_MAXLENGTH,
+                         (const uint32) rand() % NAME_MAXLENGTH,
+                         (const uint32) rand()};
 
   struct avl **frame = init_frame();
 
@@ -88,7 +105,7 @@ void repl(int argc, char *const argv[], int optind) {
         for (i = 0; i < NAME_MAXLENGTH && (c = getchar()) != '\n'; i++)
           name[i] = c;
         name[i + 1] = '\0';
-        clear_stdin();
+        if (c != '\n') clear_stdin();
 
         printf("X coordinate (64-bit decimal integer): ");
         scanf("%ld", &x);
@@ -112,7 +129,7 @@ void repl(int argc, char *const argv[], int optind) {
         for (; i < NAME_MAXLENGTH && (c = getchar()) != '\n'; i++)
           name[i] = c;
         name[i + 1] = '\0';
-        clear_stdin();
+        if (c != '\n') clear_stdin();
 
         struct datum *dp = get_by_name(frame, seed, name);
         print_datum(dp);
