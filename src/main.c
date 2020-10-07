@@ -2,13 +2,13 @@
 
 #include "main.h"
 
-int main(int argc, char const *argv[]) {
+int main(int argc, char *const argv[]) {
   int16 opt;
   enum {INTERACTIVE, CONVHULL, DIJKSTRA} mode = INTERACTIVE;
 
   char *dijkstart = NULL;
   char *dijkend = NULL;
-  while ((opt = getopt(argc, argv, "icd:")) != -1) {
+  while ((opt = getopt(argc, argv, "icd:e:")) != -1) {
     switch (opt) {
       case 'i':
         mode = INTERACTIVE;
@@ -17,12 +17,12 @@ int main(int argc, char const *argv[]) {
         mode = CONVHULL;
         break;
       case 'd':
-        dijkstart = &optarg;
+        dijkstart = optarg;
         mode = DIJKSTRA;
         break;
       case 'e':
         if (mode == DIJKSTRA) {
-          dijkend = &optarg;
+          dijkend = optarg;
           break;
         }
         __attribute__ ((fallthrough));
@@ -36,7 +36,7 @@ int main(int argc, char const *argv[]) {
 
   switch (mode) {
     case (INTERACTIVE):
-      repl();
+      repl(argc, argv, optind);
       exit(EXIT_SUCCESS);
     case (CONVHULL):
       fprintf(stderr, "Convex hull CLI not yet implemented.\n");
@@ -47,49 +47,92 @@ int main(int argc, char const *argv[]) {
   }
 }
 
-void repl() {
-  char opt;
+void repl(int argc, char *const argv[], int optind) {
+  srand((unsigned) time(NULL));
+  const uint32 seed = (const uint32) rand();
+
+  struct avl **frame = init_frame();
+
+  for (int i = optind; i < argc; i++)
+    parse_inf(frame, seed, argv[i]);
+
+  char opt, c;
+  char name[NAME_MAXLENGTH + 1];
+  int64 x,y;
+  int8 i;
+
   char *prompt =
     "\nEnter one digit 0-6.\n\n"
-    "0. Add point\n"
-    "1. Retrieve point\n"
-    "2. Dijkstra (All)\n"
-    "3. Dijkstra (Selected)\n"
-    "4. Convex hull (All)\n"
-    "5. Convex hull (Selected)\n"
-    "6. Quit\n";
+    "0. Quit\n"
+    "1. Add point\n"
+    "2. Retrieve point\n"
+    "3. Dijkstra (All)\n"
+    "4. Dijkstra (Selected)\n"
+    "5. Convex hull (All)\n"
+    "6. Convex hull (Selected)\n\n"
+    "> ";
 
   do {
-    fflush(stdin);
     printf("%s", prompt);
 
-    if ((opt = getchar()) == EOF)
-      exit(EXIT_SUCCESS);
+    opt = getchar();
+    clear_stdin();
 
     switch (opt) {
       case '0':
-        fprintf(stderr, "\nAdd point option not yet implemented.\n");
-        break;
+        printf("\nQuitting...\n");
+        exit(EXIT_SUCCESS);
       case '1':
-        fprintf(stderr, "\nRetrieve point option not yet implemented.\n");
+
+        printf("Name (string): ");
+        for (i = 0; i < NAME_MAXLENGTH && (c = getchar()) != '\n'; i++)
+          name[i] = c;
+        name[i + 1] = '\0';
+        clear_stdin();
+
+        printf("X coordinate (64-bit decimal integer): ");
+        scanf("%ld", &x);
+        clear_stdin();
+
+        printf("Y coordinate (64-bit decimal integer): ");
+        scanf("%ld", &y);
+        clear_stdin();
+
+        struct datum d = NEW_DATUM;
+        strcpy(d.name, name);
+        d.x = x;
+        d.y = y;
+
+        add_datum(frame, seed, d);
+
         break;
       case '2':
-        fprintf(stderr, "\nDijkstra (All) option not yet implemented.\n");
+        printf("Name (string): ");
+        i = 0;
+        for (; i < NAME_MAXLENGTH && (c = getchar()) != '\n'; i++)
+          name[i] = c;
+        name[i + 1] = '\0';
+        clear_stdin();
+
+        struct datum *dp = get_by_name(frame, seed, name);
+        print_datum(dp);
+
         break;
       case '3':
-        fprintf(stderr,
-          "\nDijkstra (Selected) option not yet implemented.\n");
+        fprintf(stderr, "\nDijkstra (All) option not yet implemented.\n");
         break;
       case '4':
         fprintf(stderr,
-          "\nConvex hull (All) option not yet implemented.\n");
+          "\nDijkstra (Selected) option not yet implemented.\n");
         break;
       case '5':
         fprintf(stderr,
-          "\nConvex hull (Selected) option not yet implemented.\n");
+          "\nConvex hull (All) option not yet implemented.\n");
         break;
       case '6':
-        exit(EXIT_SUCCESS);
+        fprintf(stderr,
+          "\nConvex hull (Selected) option not yet implemented.\n");
+        break;
       default:
         break;
     }

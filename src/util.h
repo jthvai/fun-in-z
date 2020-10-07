@@ -1,7 +1,12 @@
 // SPDX-License-Identifier: X11
 
+#pragma once
+
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
+
+#define NAME_MAXLENGTH 32
 
 typedef int_least8_t   int8;
 typedef int_least16_t  int16;
@@ -13,7 +18,11 @@ typedef uint_least32_t uint32;
 typedef uint_least64_t uint64;
 
 struct datum {
-  const char *name;
-  const int64 x;
-  const int64 y;
+  char name[NAME_MAXLENGTH + 1];
+  int64 x;
+  int64 y;
 };
+#define NEW_DATUM {"",0,0}
+void print_datum(struct datum *datum);
+
+void clear_stdin();

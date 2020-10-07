@@ -7,12 +7,17 @@
 
 ## Usage
 
-Compilation has been tested with GNU Make 4.3 and GCC 10.2.0 on Arch Linux. Compile by issuing the following in the root
-directory of the repository.
+Compile by issuing the following in the root directory of the repository.
 
 ```shell
 make
 ```
+
+Compilation tested on Arch Linux with:
+
+- [GNU Make](https://www.gnu.org/software/make/) 4.3
+- [GCC](http://gcc.gnu.org/) 10.2.0
+- [GNU C Library](https://www.gnu.org/software/libc/) 2.32
 
 ## License
 
