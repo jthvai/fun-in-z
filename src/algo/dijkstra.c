@@ -3,9 +3,9 @@
 #include "dijkstra.h"
 
 static void print_ans(struct datum **ans);
-static struct datum **dijkstra(uint32 **graph, struct datum **idlist,
+static struct datum **dijkstra(uint64 **graph, struct datum **idlist,
                                struct datum *src, struct datum *dest);
-static uint32 **relax(uint32 **graph, struct datum **idlist,
+static uint64 **relax(uint64 **graph, struct datum **idlist,
                       struct datum*u, struct datum*v);
 
 /*!
@@ -46,8 +46,8 @@ static void print_ans(struct datum **ans) {
 }
 
 /*!
- * Calculate the path with the shortest manhattan distance between two
- * points.
+ * Calculate the path with the shortest squared Euclidean distance between
+ * two points.
  *
  * \param graph Adjacency matrix of edge weights
  * \param idlist Array of corresponding points
@@ -55,7 +55,7 @@ static void print_ans(struct datum **ans) {
  * \param dest Destination point
  * \return Ordered array of data, representing the path
  */
-static struct datum **dijkstra(uint32 **graph, struct datum **idlist,
+static struct datum **dijkstra(uint64 **graph, struct datum **idlist,
                                struct datum *src, struct datum *dest) {
   return NULL;
 }
@@ -68,7 +68,7 @@ static struct datum **dijkstra(uint32 **graph, struct datum **idlist,
  * \param u,v Vertices of the edge to relax
  * \return Updated graph
  */
-static uint32 **relax(uint32 **graph, struct datum **idlist,
+static uint64 **relax(uint64 **graph, struct datum **idlist,
                       struct datum*u, struct datum*v) {
   return NULL;
 }

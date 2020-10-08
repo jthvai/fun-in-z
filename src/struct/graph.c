@@ -29,17 +29,18 @@ struct datum **parse_inf_graph(struct datum **idlist, const char *fn,
  *               matrix, terminated with a NULL.
  * \return Adjacency matrix of edge weights
  */
-uint32 **init_graph(struct datum *src, struct datum **idlist) {
+uint64 **init_graph(struct datum *src, struct datum **idlist) {
   return NULL;
 }
 
 /*!
- * Calculates the manhattan distance between two points.
+ * Calculates the squared Euclidean distance between two points.
  *
  * \param src Starting point
  * \param dest Finishing point
- * \return The manhattan distance between the two points
+ * \return The squared Euclidean distance between the two points
  */
 static uint64 weight(struct datum *src, struct datum *dest) {
-  return 0;
+  return (uint64) (llabs(src->x - dest->x) * llabs(src->x - dest->x) +
+                   llabs(src->y - dest->y) * llabs(src->y - dest->y));
 }
