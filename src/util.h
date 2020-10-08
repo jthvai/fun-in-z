@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /*!
  * Maximum length for the name of a datum.
@@ -35,7 +36,9 @@ typedef uint_least32_t uint32;
 typedef uint_least64_t uint64;
 
 /*!
- * A single point in the plane, initialised to be sensible empty values.
+ * A single point in the plane.
+ *
+ * NEW_DATUMP is initialised to 0.
  *
  * `name` contains the name of the point as a null-terminated string. `x`,
  * `y` store the coordinates of the point, respectively.
@@ -45,10 +48,12 @@ typedef uint_least64_t uint64;
  */
 struct datum {
   char name[NAME_MAXLENGTH + 1];
-  int64 x;
-  int64 y;
+  int32 x;
+  int32 y;
 };
-#define NEW_DATUM {"",0,0}
+#define NEW_DATUMP (struct datum *) calloc(1, sizeof(struct datum))
+struct datum *read_datum(FILE *fp);
 void print_datum(struct datum *datum);
 
+void readname(char name[]);
 void clear_stdin();

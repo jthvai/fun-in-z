@@ -32,8 +32,20 @@ static int8 hash(const uint32 s, char c) {
  * \param seed Hash key
  * \param fn Name of file to parse
  */
-void parse_inf(struct avl **frame, const uint32 seed[], const char *fn) {
+void parse_inf_frame(struct avl **frame, const uint32 seed[],
+                     const char *fn) {
   if (frame == NULL) return;
+}
+
+/*!
+ * Frees memory in use by the frame.
+ *
+ * \param frame Frame to release
+ * \return `EXIT_SUCCESS` (0) if the process terminated without error,
+ *         `EXIT_FAILURE` (1) otherwise
+ */
+int free_frame(struct avl **frame) {
+  return EXIT_SUCCESS;
 }
 
 /*!
@@ -66,5 +78,18 @@ struct avl **add_datum(struct avl **frame, const uint32 seed[],
   fprintf(stderr, "Add point option not yet implemented.\n");
   if (frame == NULL) return NULL;
 
+  return NULL;
+}
+
+/*!
+ * Stores every datum in the frame into an array.
+ *
+ * \param frame Frame to flatten
+ * \param src Source for Dijkstra
+ * \param dest Destination for Dijkstra
+ * \return Array of all data, terminated with a NULL, or NULL if `src` or
+ *         `dest` could not be found.
+ */
+struct datum **flatten(struct avl **frame, char *src, char *dest) {
   return NULL;
 }

@@ -59,17 +59,6 @@ static uint64 right(uint64 index) {
 }
 
 /*!
- * Calculates the manhattan distance between two points.
- *
- * \param src Starting point
- * \param dest Finishing point
- * \return The manhattan distance between the two points
- */
-uint64 value(struct datum *src, struct datum *dest) {
-  return 0;
-}
-
-/*!
  * Inserts a datum into the heap.
  *
  * \param data Heap to insert into

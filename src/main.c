@@ -14,8 +14,8 @@ int main(int argc, char *const argv[]) {
   int16 opt;
   enum {INTERACTIVE, CONVHULL, DIJKSTRA} mode = INTERACTIVE;
 
-  char *dijkstart = NULL;
-  char *dijkend = NULL;
+  char *dijksrc = NULL;
+  char *dijkdest = NULL;
   while ((opt = getopt(argc, argv, "icd:e:")) != -1) {
     switch (opt) {
       case 'i':
@@ -25,12 +25,12 @@ int main(int argc, char *const argv[]) {
         mode = CONVHULL;
         break;
       case 'd':
-        dijkstart = optarg;
+        dijksrc = optarg;
         mode = DIJKSTRA;
         break;
       case 'e':
         if (mode == DIJKSTRA) {
-          dijkend = optarg;
+          dijkdest = optarg;
           break;
         }
         __attribute__ ((fallthrough));
@@ -42,16 +42,32 @@ int main(int argc, char *const argv[]) {
     }
   }
 
+  if (optind >= argc) {
+    fprintf(stderr,
+      "Usage: %s [-i | -c | -d start -e end] -- [<file>...]\n", argv[0]);
+    exit(EXIT_FAILURE);
+  }
+
+  struct datum **idlist = NULL;
   switch (mode) {
     case (INTERACTIVE):
-      repl(argc, argv, optind);
-      exit(EXIT_SUCCESS);
+      exit(repl(argc, argv, optind));
     case (CONVHULL):
       fprintf(stderr, "Convex hull CLI not yet implemented.\n");
       exit(EXIT_SUCCESS);
     case (DIJKSTRA):
-      fprintf(stderr, "Dijkstra CLI not yet implemented.\n");
-      exit(EXIT_SUCCESS);
+      idlist = parse_inf_graph(NULL, argv[optind], dijksrc, dijkdest);
+      for (int i = optind + 1; i < argc; i++)
+        parse_inf_graph(idlist, argv[i], dijksrc, dijkdest);
+
+      if (idlist == NULL ||
+          idlist[0]->name != dijksrc || idlist[1]->name != dijkdest) {
+        fprintf(stderr,
+          "Dijkstra source or destination not found in input files.\n");
+        exit(EXIT_FAILURE);
+      }
+
+      exit(dijkstra_cli(idlist, dijksrc, dijkdest));
   }
 }
 
@@ -61,8 +77,10 @@ int main(int argc, char *const argv[]) {
  * \param argc Number of arguments of `main()`
  * \param argv Array of argumet strings of `main()`
  * \param optind Index of the first non-option argument of `main()`
+ * \return `EXIT_SUCCESS` (0) if the function terminated without error,
+ *         `EXIT_FAILURE` (1) otherwise
  */
-void repl(int argc, char *const argv[], int optind) {
+int repl(int argc, char *const argv[], int optind) {
   srand((unsigned) time(NULL));
   const uint32 seed[] = {(const uint32) rand() % NAME_MAXLENGTH,
                          (const uint32) rand() % NAME_MAXLENGTH,
@@ -71,12 +89,14 @@ void repl(int argc, char *const argv[], int optind) {
   struct avl **frame = init_frame();
 
   for (int i = optind; i < argc; i++)
-    parse_inf(frame, seed, argv[i]);
+    parse_inf_frame(frame, seed, argv[i]);
 
-  char opt, c;
+  char opt;
   char name[NAME_MAXLENGTH + 1];
-  int64 x,y;
-  int8 i;
+  char named[NAME_MAXLENGTH + 1];
+  int32 x,y;
+  struct datum *dp;
+  struct datum **idlist;
 
   char *prompt =
     "\nEnter one digit 0-6.\n\n"
@@ -98,49 +118,60 @@ void repl(int argc, char *const argv[], int optind) {
     switch (opt) {
       case '0':
         printf("\nQuitting...\n");
-        exit(EXIT_SUCCESS);
+        return free_frame(frame);
       case '1':
-
         printf("Name (string): ");
-        for (i = 0; i < NAME_MAXLENGTH && (c = getchar()) != '\n'; i++)
-          name[i] = c;
-        name[i + 1] = '\0';
-        if (c != '\n') clear_stdin();
+        readname(name);
+        if (name[0] == '\0') break;
 
         printf("X coordinate (64-bit decimal integer): ");
-        scanf("%ld", &x);
+        scanf("%d", &x);
         clear_stdin();
 
         printf("Y coordinate (64-bit decimal integer): ");
-        scanf("%ld", &y);
+        scanf("%d", &y);
         clear_stdin();
 
-        struct datum d = NEW_DATUM;
-        strcpy(d.name, name);
-        d.x = x;
-        d.y = y;
+        dp = NEW_DATUMP;
+        strcpy(dp->name, name);
+        dp->x = x;
+        dp->y = y;
 
-        add_datum(frame, seed, d);
+        add_datum(frame, seed, *dp);
+        free(dp);
 
         break;
       case '2':
         printf("Name (string): ");
-        i = 0;
-        for (; i < NAME_MAXLENGTH && (c = getchar()) != '\n'; i++)
-          name[i] = c;
-        name[i + 1] = '\0';
-        if (c != '\n') clear_stdin();
+        readname(name);
+        if (name[0] == '\0') break;
 
-        struct datum *dp = get_by_name(frame, seed, name);
+        dp = get_by_name(frame, seed, name);
         print_datum(dp);
 
         break;
       case '3':
-        fprintf(stderr, "\nDijkstra (All) option not yet implemented.\n");
+        printf("Source name (string): ");
+        readname(name);
+        if (name[0] == '\0') break;
+
+        printf("Destination name (string): ");
+        readname(named);
+        if (named[0] == '\0') break;
+
+        idlist = flatten(frame, name, named);
+
+        if (idlist == NULL) {
+          fprintf(stderr,
+            "Dijkstra source or destination not found in data.\n");
+          break;
+        }
+        else {
+          dijkstra_repl(idlist, name, named);
+        }
+
         break;
       case '4':
-        fprintf(stderr,
-          "\nDijkstra (Selected) option not yet implemented.\n");
         break;
       case '5':
         fprintf(stderr,
@@ -153,5 +184,9 @@ void repl(int argc, char *const argv[], int optind) {
       default:
         break;
     }
+
+    clear_stdin();
   } while (opt != EOF);
+
+  return(free_frame(frame));
 }
