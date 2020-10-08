@@ -17,5 +17,5 @@ struct avl {
   struct avl *r;
 };
 
-struct avl *insert(struct avl *node, struct datum datum);
+struct avl *insert(struct avl *node, struct datum *datum);
 struct datum *search(struct avl *node, char name[]);

@@ -23,7 +23,7 @@ static struct avl *make_node(struct datum datum) {
  * \param datum Datum to insert
  * \return Pointer to the updated tree
  */
-struct avl *insert(struct avl *root, struct datum datum) {
+struct avl *insert(struct avl *root, struct datum *datum) {
   return NULL;
 }
 

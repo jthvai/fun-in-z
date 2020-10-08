@@ -10,7 +10,7 @@
 void print_datum(struct datum *dp) {
   dp == NULL ?
     fprintf(stderr, "print_datum: Null datum") :
-    printf("{ Name: %50s, X: %d, Y: %d }\n", dp->name, dp->x, dp->y);
+    printf("{ Name: %s, X: %d, Y: %d }\n", dp->name, dp->x, dp->y);
 }
 
 /*!

@@ -74,7 +74,7 @@ struct datum *get_by_name(struct avl **frame, const uint32 seed[],
  * \return Pointer to the updated frame
  */
 struct avl **add_datum(struct avl **frame, const uint32 seed[],
-                       struct datum datum) {
+                       struct datum *datum) {
   fprintf(stderr, "Add point option not yet implemented.\n");
   if (frame == NULL) return NULL;
 

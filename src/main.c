@@ -42,11 +42,11 @@ int main(int argc, char *const argv[]) {
     }
   }
 
-  if (optind >= argc) {
-    fprintf(stderr,
-      "Usage: %s [-i | -c | -d start -e end] -- [<file>...]\n", argv[0]);
-    exit(EXIT_FAILURE);
-  }
+  // if (optind >= argc) {
+  //   fprintf(stderr,
+  //     "Usage: %s [-i | -c | -d start -e end] -- [<file>...]\n", argv[0]);
+  //   exit(EXIT_FAILURE);
+  // }
 
   struct datum **idlist = NULL;
   switch (mode) {
@@ -95,6 +95,7 @@ int repl(int argc, char *const argv[], int optind) {
   char name[NAME_MAXLENGTH + 1];
   char named[NAME_MAXLENGTH + 1];
   int32 x,y;
+  uint64 i, n;
   struct datum *dp;
   struct datum **idlist;
 
@@ -124,11 +125,11 @@ int repl(int argc, char *const argv[], int optind) {
         readname(name);
         if (name[0] == '\0') break;
 
-        printf("X coordinate (64-bit decimal integer): ");
+        printf("X coordinate (64-bit signed integer): ");
         scanf("%d", &x);
         clear_stdin();
 
-        printf("Y coordinate (64-bit decimal integer): ");
+        printf("Y coordinate (64-bit signed integer): ");
         scanf("%d", &y);
         clear_stdin();
 
@@ -137,7 +138,7 @@ int repl(int argc, char *const argv[], int optind) {
         dp->x = x;
         dp->y = y;
 
-        add_datum(frame, seed, *dp);
+        add_datum(frame, seed, dp);
         free(dp);
 
         break;
@@ -147,7 +148,10 @@ int repl(int argc, char *const argv[], int optind) {
         if (name[0] == '\0') break;
 
         dp = get_by_name(frame, seed, name);
-        print_datum(dp);
+        if (dp == NULL)
+          printf("%s not found.\n", name);
+        else
+          print_datum(dp);
 
         break;
       case '3':
@@ -172,6 +176,50 @@ int repl(int argc, char *const argv[], int optind) {
 
         break;
       case '4':
+        printf("Source name (string): ");
+        readname(name);
+        if (name[0] == '\0') break;
+
+        printf("Destination name (string): ");
+        readname(named);
+        if (named[0] == '\0') break;
+
+        printf("Number of points (64-bit unsigned integer): ");
+        scanf("%lu", &n);
+        clear_stdin();
+
+        idlist = (struct datum **) calloc(n, sizeof(struct datum *));
+
+        for (i = 0; i < n; i++) {
+          printf("(%lu/%lu) Name (string): ", i + 1, n);
+          readname(name);
+          if (name[0] == '\0') {
+            n--;
+            i--;
+            continue;
+          }
+
+          dp = get_by_name(frame, seed, name);
+          if (dp == NULL) {
+            printf("%s not found.\n", name);
+            n--;
+            i--;
+          }
+          else {
+            idlist[i] = dp;
+          }
+        }
+
+        if (idlist == NULL) {
+          fprintf(stderr,
+            "Dijkstra source or destination not found in data.\n");
+          break;
+        }
+        else {
+          dijkstra_repl(idlist, name, named);
+        }
+
+        free(idlist);
         break;
       case '5':
         fprintf(stderr,
@@ -184,8 +232,6 @@ int repl(int argc, char *const argv[], int optind) {
       default:
         break;
     }
-
-    clear_stdin();
   } while (opt != EOF);
 
   return(free_frame(frame));

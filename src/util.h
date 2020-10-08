@@ -15,6 +15,16 @@
 #define NAME_MAXLENGTH 32
 
 /*!
+ * Solution to \f$2^{64} > (x - (-x))^2 + (x - (-x))^2\f$.
+ *
+ * Defined such that the maximum possible squared Euclidean distance does
+ * not cause an integer overflow.
+ *
+ * \def XY_MAX
+ */
+#define XY_MAX 1518500249
+
+/*!
  * Integer types of "known" sizes.
  *
  * \typedef int8
@@ -38,20 +48,21 @@ typedef uint_least64_t uint64;
 /*!
  * A single point in the plane.
  *
- * NEW_DATUMP is initialised to 0.
- *
- * `name` contains the name of the point as a null-terminated string. `x`,
- * `y` store the coordinates of the point, respectively.
- *
  * \struct datum
- * \def NEW_DATUM
  */
 struct datum {
-  char name[NAME_MAXLENGTH + 1];
-  int32 x;
-  int32 y;
+  char name[NAME_MAXLENGTH + 1]; /*!< Name of point, null-terminated */
+  int32 x;                       /*!< X coordinate of point */
+  int32 y;                       /*!< Y coordinate of point */
 };
+
+/*!
+ * Pointer to a newly allocated memory for a single datum.
+ *
+ * \def NEW_DATUMP
+ */
 #define NEW_DATUMP (struct datum *) calloc(1, sizeof(struct datum))
+
 struct datum *read_datum(FILE *fp);
 void print_datum(struct datum *datum);
 

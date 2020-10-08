@@ -24,5 +24,5 @@ int free_frame(struct avl **frame);
 struct datum *get_by_name(struct avl **frame, const uint32 seed[],
                           char name[]);
 struct avl **add_datum(struct avl **frame, const uint32 seed[],
-                       struct datum datum);
+                       struct datum *datum);
 struct datum **flatten(struct avl **frame, char *src, char *dest);
