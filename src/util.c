@@ -10,7 +10,8 @@
 void print_datum(struct datum *dp) {
   dp == NULL ?
     fprintf(stderr, "print_datum: Null datum") :
-    printf("{ Name: %s, X: %d, Y: %d }\n", dp->name, dp->x, dp->y);
+    printf("{ Name: %s, X: %d, Y: %d , A: %d }\n",
+           dp->name, dp->x, dp->y, dp->a);
 }
 
 /*!
@@ -24,6 +25,7 @@ struct datum *read_datum(FILE *fp) {
   char name[NAME_MAXLENGTH + 1];
   int32 x,y;
   int8 i;
+  uint8 a;
 
   for (i = -1; i < NAME_MAXLENGTH &&
        (c = fgetc(fp)) != '\n' && c != ':' && c != EOF;) {
@@ -36,12 +38,13 @@ struct datum *read_datum(FILE *fp) {
   for (; (c = fgetc(fp)) != '\n' && c != ':' && c != EOF;);
   if (c == '\n' || c == EOF) return NULL;
 
-  scanf("%d:%d\n", &x, &y);
+  scanf("%d:%d:%hhu\n", &x, &y, &a);
 
   struct datum *dp = NEW_DATUMP;
   strcpy(dp->name, name);
   dp->x = x;
   dp->y = y;
+  dp->a = a;
 
   return dp;
 }

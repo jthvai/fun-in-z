@@ -95,6 +95,7 @@ int repl(int argc, char *const argv[], int optind) {
   char name[NAME_MAXLENGTH + 1];
   char named[NAME_MAXLENGTH + 1];
   int32 x,y;
+  uint8 a;
   uint64 i, n;
   struct datum *dp;
   struct datum **idlist;
@@ -125,18 +126,23 @@ int repl(int argc, char *const argv[], int optind) {
         readname(name);
         if (name[0] == '\0') break;
 
-        printf("X coordinate (64-bit signed integer): ");
+        printf("X coordinate (32-bit signed integer): ");
         scanf("%d", &x);
         clear_stdin();
 
-        printf("Y coordinate (64-bit signed integer): ");
+        printf("Y coordinate (32-bit signed integer): ");
         scanf("%d", &y);
+        clear_stdin();
+
+        printf("Altitude (unsigned integer 1-16): ");
+        scanf("%hhu", &a);
         clear_stdin();
 
         dp = NEW_DATUMP;
         strcpy(dp->name, name);
         dp->x = x;
         dp->y = y;
+        dp->a = a;
 
         add_datum(frame, seed, dp);
         free(dp);

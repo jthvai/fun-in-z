@@ -22,7 +22,14 @@
  *
  * \def XY_MAX
  */
-#define XY_MAX 1518500249
+#define XY_MAX 379625062
+
+/*!
+ * Maximum altitude of a point.
+ *
+ * \def A_MAX
+ */
+#define A_MAX 16
 
 /*!
  * Integer types of "known" sizes.
@@ -54,6 +61,7 @@ struct datum {
   char name[NAME_MAXLENGTH + 1]; /*!< Name of point, null-terminated */
   int32 x;                       /*!< X coordinate of point */
   int32 y;                       /*!< Y coordinate of point */
+  uint8 a;                       /*!< Altitude of point */
 };
 
 /*!
