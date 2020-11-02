@@ -2,8 +2,8 @@
 
 #include "heap.h"
 
-static struct datum *min_heapify(struct datum **data, uint64 index);
-static void deckey(struct datum **data, uint64 index, uint64 key);
+static datum *min_heapify(datum **data, uint64 index);
+static void deckey(datum **data, uint64 index, uint64 key);
 static uint64 parent(uint64 index);
 static uint64 left(uint64 index);
 static uint64 right(uint64 index);
@@ -13,7 +13,7 @@ static uint64 right(uint64 index);
  *
  * \param data Array to heapify
  */
-struct datum *build_minheap(struct datum **data) {
+datum *build_minheap(datum **data) {
   return NULL;
 }
 
@@ -24,7 +24,7 @@ struct datum *build_minheap(struct datum **data) {
  * \param index Array index of the node to heapify
  * \return Updated array
  */
-static struct datum *min_heapify(struct datum **data, uint64 index) {
+static datum *min_heapify(datum **data, uint64 index) {
   return NULL;
 }
 
@@ -66,7 +66,7 @@ static uint64 right(uint64 index) {
  * \param key Value of the datum
  * \return Updated array
  */
-struct datum **push(struct datum **data, struct datum *datum, uint64 key) {
+datum **push(datum **data, datum *dp, uint64 key) {
   return NULL;
 }
 
@@ -76,7 +76,7 @@ struct datum **push(struct datum **data, struct datum *datum, uint64 key) {
  * \param data Heap to search in
  * \return Pointer to the minimum of the heap
  */
-struct datum *peek(struct datum **data) {
+datum *peek(datum **data) {
   return *data;
 }
 
@@ -86,7 +86,7 @@ struct datum *peek(struct datum **data) {
  * \param data Heap to search in
  * \return Pointer to the minimum of the heap
  */
-struct datum *pop(struct datum **data) {
+datum *pop(datum **data) {
   return *data;
 }
 
@@ -97,6 +97,6 @@ struct datum *pop(struct datum **data) {
  * \param index Current index of the node
  * \param key Value of the node
  */
-static void deckey(struct datum **data, uint64 index, uint64 key) {
+static void deckey(datum **data, uint64 index, uint64 key) {
   return;
 }

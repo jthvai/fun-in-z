@@ -37,8 +37,8 @@ Enter one digit 0-6.
 0. Quit
 1. Add point
 2. Retrieve point
-3. Dijkstra (All)
-4. Dijkstra (Selected)
+3. Minimum spanning tree (All)
+4. Minimum spanning tree (Selected)
 5. Convex hull (All)
 6. Convex hull (Selected)
 
@@ -54,12 +54,10 @@ Invoking with input files will parse those inputs (incomplete).
 $ ./zfun [files...]
 ```
 
-Invoking with `-d source -e dest` activates the command line interface for Dijkstra's algorithm (incomplete). The
-coordinates of `source` and `dest` will be searched for in the subsequent input files. It is invalid to only give one of
-`-d` or `-e`.
+Invoking with `-m` activates the command line interface for the minimum spanning tree algorithm (incomplete).
 
 ```shell
-$ ./zfun -d source -e dest [files...]
+$ ./zfun -m [files...]
 ```
 
 Invoking with `-c` activates the command line interface for the convex hull algorithm (incomplete).

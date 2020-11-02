@@ -2,9 +2,9 @@
 
 #include "avl.h"
 
-static struct avl *make_node(struct datum datum);
-static struct avl *left_rot(struct avl *node);
-static struct avl *right_rot(struct avl *node);
+static avl_tree *make_node(datum d);
+static avl_tree *left_rot(avl_tree *node);
+static avl_tree *right_rot(avl_tree *node);
 
 /*!
  * Creates a single node out of a datum.
@@ -12,7 +12,7 @@ static struct avl *right_rot(struct avl *node);
  * \param datum Datum to wrap
  * \return Pointer to the created node
  */
-static struct avl *make_node(struct datum datum) {
+static avl_tree *make_node(datum d) {
   return NULL;
 }
 
@@ -23,7 +23,7 @@ static struct avl *make_node(struct datum datum) {
  * \param datum Datum to insert
  * \return Pointer to the updated tree
  */
-struct avl *insert(struct avl *root, struct datum *datum) {
+avl_tree *insert(avl_tree *root, datum *dp) {
   return NULL;
 }
 
@@ -34,7 +34,7 @@ struct avl *insert(struct avl *root, struct datum *datum) {
  * \param node New inserted node
  * \return Pointer to the restored tree
  */
-static struct avl *insert_fix(struct avl *root, struct avl *node) {
+static avl_tree *insert_fix(avl_tree *root, avl_tree *node) {
   return NULL;
 }
 
@@ -46,7 +46,7 @@ static struct avl *insert_fix(struct avl *root, struct avl *node) {
  * \return Pointer to the datum with the same name if it exists, or NULL if
  *         it could not be found
  */
-struct datum *search(struct avl *root, char name[]) {
+datum *search(avl_tree *root, char name[]) {
   return NULL;
 }
 
@@ -56,7 +56,7 @@ struct datum *search(struct avl *root, char name[]) {
  * \param root Node to rotate on
  * \return Pointer to the root after rotation
  */
-static struct avl *left_rot(struct avl *root) {
+static avl_tree *left_rot(avl_tree *root) {
   return NULL;
 }
 
@@ -66,6 +66,6 @@ static struct avl *left_rot(struct avl *root) {
  * \param root Node to rotate on
  * \return Pointer to the root after rotation
  */
-static struct avl *right_rot(struct avl *root) {
+static avl_tree *right_rot(avl_tree *root) {
   return NULL;
 }

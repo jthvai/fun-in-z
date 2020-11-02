@@ -2,7 +2,7 @@
 
 #include "../util.h"
 
-struct datum **parse_inf_graph(struct datum **idlist, const char *fn,
+datum **parse_inf_graph(datum **idlist, const char *fn,
                                char *src, char *dest);
 
-uint64 **init_graph(struct datum *src, struct datum **idlist);
+uint64 **init_graph(datum *src, datum **idlist);

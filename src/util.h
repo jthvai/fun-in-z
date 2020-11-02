@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <math.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,13 +24,6 @@
  * \def XY_MAX
  */
 #define XY_MAX 379625062
-
-/*!
- * Maximum altitude of a point.
- *
- * \def A_MAX
- */
-#define A_MAX 16
 
 /*!
  * Integer types of "known" sizes.
@@ -55,24 +49,23 @@ typedef uint_least64_t uint64;
 /*!
  * A single point in the plane.
  *
- * \struct datum
+ * \typedef datum
  */
-struct datum {
+typedef struct {
   char name[NAME_MAXLENGTH + 1]; /*!< Name of point, null-terminated */
   int32 x;                       /*!< X coordinate of point */
   int32 y;                       /*!< Y coordinate of point */
-  uint8 a;                       /*!< Altitude of point */
-};
+} datum;
 
 /*!
  * Pointer to a newly allocated memory for a single datum.
  *
  * \def NEW_DATUMP
  */
-#define NEW_DATUMP (struct datum *) calloc(1, sizeof(struct datum))
+#define NEW_DATUMP (datum *) calloc(1, sizeof(datum))
 
-struct datum *read_datum(FILE *fp);
-void print_datum(struct datum *datum);
+datum *read_datum(FILE *fp);
+void print_datum(datum *dp);
 
-void readname(char name[]);
+int fpeek(FILE *fp);
 void clear_stdin();

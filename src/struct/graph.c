@@ -2,7 +2,7 @@
 
 #include "graph.h"
 
-static uint64 weight(struct datum *src, struct datum *dest);
+static uint64 weight(datum *src, datum *dest);
 
 /*!
  * Parses the contents of a file, and stores it in an array.
@@ -14,7 +14,7 @@ static uint64 weight(struct datum *src, struct datum *dest);
  * \return Updated array, terminated with a NULL. The first element
  *         is the datum with name `src` if found, and the second is `dest`.
  */
-struct datum **parse_inf_graph(struct datum **idlist, const char *fn,
+datum **parse_inf_graph(datum **idlist, const char *fn,
                                char *src, char *dest) {
   return NULL;
 }
@@ -29,7 +29,7 @@ struct datum **parse_inf_graph(struct datum **idlist, const char *fn,
  *               matrix, terminated with a NULL.
  * \return Adjacency matrix of edge weights
  */
-uint64 **init_graph(struct datum *src, struct datum **idlist) {
+uint64 **init_graph(datum *src, datum **idlist) {
   return NULL;
 }
 
@@ -40,7 +40,7 @@ uint64 **init_graph(struct datum *src, struct datum **idlist) {
  * \param dest Finishing point
  * \return The squared Euclidean distance between the two points
  */
-static uint64 weight(struct datum *src, struct datum *dest) {
+static uint64 weight(datum *src, datum *dest) {
   return (uint64) (llabs(src->x - dest->x) * llabs(src->x - dest->x) +
                    llabs(src->y - dest->y) * llabs(src->y - dest->y));
 }

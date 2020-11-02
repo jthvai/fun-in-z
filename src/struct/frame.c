@@ -9,7 +9,7 @@ static int8 hash(const uint32 s, char c);
  *
  * \return Pointer to an AVL matrix -- the frame
  */
-struct avl **init_frame() {
+avl_tree **init_frame() {
   return NULL;
 }
 
@@ -32,7 +32,7 @@ static int8 hash(const uint32 s, char c) {
  * \param seed Hash key
  * \param fn Name of file to parse
  */
-void parse_inf_frame(struct avl **frame, const uint32 seed[],
+void parse_inf_frame(avl_tree **frame, const uint32 seed[],
                      const char *fn) {
   if (frame == NULL) return;
 }
@@ -44,7 +44,7 @@ void parse_inf_frame(struct avl **frame, const uint32 seed[],
  * \return `EXIT_SUCCESS` (0) if the process terminated without error,
  *         `EXIT_FAILURE` (1) otherwise
  */
-int free_frame(struct avl **frame) {
+int free_frame(avl_tree **frame) {
   return EXIT_SUCCESS;
 }
 
@@ -57,7 +57,7 @@ int free_frame(struct avl **frame) {
  * \return Pointer to the datum with the same name if it exists, or NULL if
  *         it could not be found
  */
-struct datum *get_by_name(struct avl **frame, const uint32 seed[],
+datum *get_by_name(avl_tree **frame, const uint32 seed[],
                           char name[]) {
   fprintf(stderr, "Retrieve point option not yet implemented.\n");
   if (frame == NULL) return NULL;
@@ -73,8 +73,8 @@ struct datum *get_by_name(struct avl **frame, const uint32 seed[],
  * \param datum Datum to insert
  * \return Pointer to the updated frame
  */
-struct avl **add_datum(struct avl **frame, const uint32 seed[],
-                       struct datum *datum) {
+avl_tree **add_datum(avl_tree **frame, const uint32 seed[],
+                       datum *dp) {
   fprintf(stderr, "Add point option not yet implemented.\n");
   if (frame == NULL) return NULL;
 
@@ -90,6 +90,6 @@ struct avl **add_datum(struct avl **frame, const uint32 seed[],
  * \return Array of all data, terminated with a NULL, or NULL if `src` or
  *         `dest` could not be found.
  */
-struct datum **flatten(struct avl **frame, char *src, char *dest) {
+datum **flatten(avl_tree **frame, char *src, char *dest) {
   return NULL;
 }

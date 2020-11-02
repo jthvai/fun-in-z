@@ -7,15 +7,14 @@
 /*!
  * An AVL tree node.
  *
- * `bal` stores the balance value of this node, and `l`, `r` point to the
- * left and right subtrees respectively.
+ * \typedef avl_tree
  */
-struct avl {
-  struct datum datum;
-  int32 bal;
-  struct avl *l;
-  struct avl *r;
-};
+typedef struct avl_tree_t {
+  datum d;              /*!< Node value */
+  int32 bal;            /*!< Balance factor */
+  struct avl_tree_t *l; /*!< Left child */
+  struct avl_tree_t *r; /*!< Right child */
+} avl_tree;
 
-struct avl *insert(struct avl *node, struct datum *datum);
-struct datum *search(struct avl *node, char name[]);
+avl_tree *insert(avl_tree *node, datum *dp);
+datum *search(avl_tree *node, char name[]);

@@ -7,11 +7,11 @@
  *
  * \param dp Pointer to the datum to print
  */
-void print_datum(struct datum *dp) {
+void print_datum(datum *dp) {
   dp == NULL ?
     fprintf(stderr, "print_datum: Null datum") :
-    printf("{ Name: %s, X: %d, Y: %d , A: %d }\n",
-           dp->name, dp->x, dp->y, dp->a);
+    printf("{ Name: %s, X: %d, Y: %d }\n",
+           dp->name, dp->x, dp->y);
 }
 
 /*!
@@ -20,50 +20,31 @@ void print_datum(struct datum *dp) {
  * \param fp Stream to read from
  * \return Pointer to parsed datum
  */
-struct datum *read_datum(FILE *fp) {
-  char c;
-  char name[NAME_MAXLENGTH + 1];
-  int32 x,y;
-  int8 i;
-  uint8 a;
+datum *read_datum(FILE *fp) {
+  datum *dp = NEW_DATUMP;
 
-  for (i = -1; i < NAME_MAXLENGTH &&
-       (c = fgetc(fp)) != '\n' && c != ':' && c != EOF;) {
-    i++;
-    name[i] = c;
-  }
-  name[i + 1] = '\0';
-  if (name[0] == '\0') return NULL;
+  char fmt[(uint8) floor(log10(NAME_MAXLENGTH)) + 1 + 2 + 1];
+  sprintf(fmt, "%%%ds", NAME_MAXLENGTH);
 
-  for (; (c = fgetc(fp)) != '\n' && c != ':' && c != EOF;);
-  if (c == '\n' || c == EOF) return NULL;
+  scanf((const char *) fmt, dp->name);
 
-  scanf("%d:%d:%hhu\n", &x, &y, &a);
-
-  struct datum *dp = NEW_DATUMP;
-  strcpy(dp->name, name);
-  dp->x = x;
-  dp->y = y;
-  dp->a = a;
+  isspace(fpeek(stdin)) ?
+    scanf(" %d %d", &(dp->x), &(dp->x)) :
+    scanf("%*s %d %d", &(dp->x), &(dp->x));
 
   return dp;
 }
 
 /*!
- * Reads a string from stdin into a buffer.
+ * Peek the first character in a stream.
  *
- * \param name Buffer to read into
+ * \param fp Stream to peek in
+ * \return First character in stream
  */
-void readname(char name[]) {
-  char c;
-  int8 i;
-  for (i = -1; i < NAME_MAXLENGTH &&
-       (c = getchar()) != '\n' && c != EOF;) {
-    i++;
-    name[i] = c;
-  }
-  name[i + 1] = '\0';
-  if (c != '\n') clear_stdin();
+int fpeek(FILE *fp) {
+  int c = fgetc(fp);
+  ungetc(c, fp);
+  return c;
 }
 
 /*!

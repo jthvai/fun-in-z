@@ -4,8 +4,8 @@
 
 #include "../util.h"
 
-struct datum *build_minheap(struct datum **data);
+datum *build_minheap(datum **data);
 
-struct datum **push(struct datum **data, struct datum *datum, uint64 key);
-struct datum *peek(struct datum **data);
-struct datum *pop(struct datum **data);
+datum **push(datum **data, datum *dp, uint64 key);
+datum *peek(datum **data);
+datum *pop(datum **data);
