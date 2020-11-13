@@ -53,14 +53,14 @@
 #define STR(s) _STR(s)
 
 /*!
- * Solution to \f$2^{64} > (x - (-x))^2 + (x - (-x))^2\f$.
+ * \f$2^{61}\f$. Solution to \f$2^{64} > (x - (-x))^2 + (x - (-x))^2\f$.
  *
  * Defined such that the maximum possible squared Euclidean distance does
  * not cause an integer overflow.
  *
  * \def XY_MAX
  */
-#define XY_MAX 379625062
+#define XY_MAX 2305843009213693952
 
 /*!
  * Integer types of "known" sizes.
