@@ -26,24 +26,16 @@ static int8 hash(const uint32 s, char c) {
 void parse_inf_frame(avl_tree *frame[FRAME_WIDTH][FRAME_WIDTH],
                      const uint32 seed[3], const char *fn) {
   FILE *fp = fopen(fn, "r");
-
-  datum *dp;
-  while ((dp = read_datum(fp)) != NULL) {
-    add_datum(frame, seed, dp);
+  if (fp == NULL) {
+    fprintf(stderr, "Failed to open %s\n", fn);
+    return;
   }
 
-  fclose(fp);
-}
+  datum *dp;
+  while ((dp = read_datum(fp)) != NULL)
+    add_datum(frame, seed, dp);
 
-/*!
- * Frees memory in use by the frame on the heap.
- *
- * \param frame Frame containing forest to release
- */
-void free_forest(avl_tree *frame[FRAME_WIDTH][FRAME_WIDTH]) {
-  for (int8 i = 0; i < FRAME_WIDTH; i++)
-    for (int8 j = 0; j < FRAME_WIDTH; j++)
-      free_tree(frame[i][j]);
+  fclose(fp);
 }
 
 /*!
@@ -74,4 +66,30 @@ void add_datum(avl_tree *frame[FRAME_WIDTH][FRAME_WIDTH],
   uint8 indx = hash(seed[2], dp->name[seed[0]]);
   uint8 indy = hash(seed[2], dp->name[seed[1]]);
   insert(frame[indx][indy], dp);
+}
+
+/*!
+ * Flatten all data into a linked list.
+ *
+ * \param frame Frame to flatten
+ */
+linked_list *flatten(avl_tree *frame[FRAME_WIDTH][FRAME_WIDTH]) {
+  linked_list *head = NULL;
+
+  for (int8 i = 0; i < FRAME_WIDTH; i++)
+    for (int8 j = 0; j < FRAME_WIDTH; j++)
+      head = flatten_tree(frame[i][j], head);
+
+  return head;
+}
+
+/*!
+ * Frees memory in use by the frame on the heap.
+ *
+ * \param frame Frame containing forest to release
+ */
+void free_forest(avl_tree *frame[FRAME_WIDTH][FRAME_WIDTH]) {
+  for (int8 i = 0; i < FRAME_WIDTH; i++)
+    for (int8 j = 0; j < FRAME_WIDTH; j++)
+      free_tree(frame[i][j]);
 }

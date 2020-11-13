@@ -48,7 +48,7 @@ static avl_tree *insert_leaf(avl_tree *root, avl_tree *leaf) {
   int cmp = strcmp(leaf->dp->name, root->dp->name);
 
   if (cmp == 0) {
-    fprintf(stderr, "Duplicate name in data, skipping...");
+    fprintf(stderr, "Duplicate name in data, skipping...\n");
     free_tree(leaf);
   }
   else if (cmp < 0) { // Insert into left subtree
@@ -243,6 +243,18 @@ datum *search(avl_tree *root, char name[]) {
     return search(root->l, name);
   else // cmp > 0
     return search(root->r, name);
+}
+
+/*!
+ * Flatten tree into a linked list.
+ *
+ * \param root Tree to flatten
+ * \param list List to attach onto
+ */
+linked_list *flatten_tree(avl_tree *root, linked_list *list) {
+  if (root == NULL)
+    return list;
+  return flatten_tree(root->r, cons(flatten_tree(root->l, list), root->dp));
 }
 
 /*!

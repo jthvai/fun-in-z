@@ -32,18 +32,17 @@ int main(int argc, char *const argv[]) {
     }
   }
 
-  // if (optind >= argc) {
-  //   fprintf(stderr,
-  //     "Usage: %s [-i | -c | -d start -e end] -- [<file>...]\n", argv[0]);
-  //   exit(EXIT_FAILURE);
-  // }
+  if (optind >= argc) {
+    fprintf(stderr,
+      "Usage: %s [-i | -c | -m] -- [<file>...]\n", argv[0]);
+    exit(EXIT_FAILURE);
+  }
 
   switch (mode) {
     case (INTERACTIVE):
       exit(repl(argc, argv, optind));
     case (CONVHULL):
-      fprintf(stderr, "Convex hull CLI not yet implemented.\n");
-      exit(EXIT_SUCCESS);
+      exit(convhull_repl(argc, argv, optind));
     case (MST):
       // !DO
       exit(EXIT_SUCCESS);
@@ -76,6 +75,9 @@ int repl(int argc, char *const argv[], int optind) {
   char opt;
   char name[NAME_MAXLENGTH + 1];
   datum *dp;
+  uint64 n;
+  linked_list *all;
+  linked_list *hull;
 
   char *prompt =
     "\nEnter one digit 0-6.\n\n"
@@ -128,12 +130,37 @@ int repl(int argc, char *const argv[], int optind) {
       case '4':
         break;
       case '5':
-        fprintf(stderr,
-          "\nConvex hull (All) option not yet implemented.\n");
+        printf("Constructing convex hull from all points...\n");
+        hull = construct_hull(flatten(frame));
+        print_convex_hull(hull, stdout);
+
         break;
       case '6':
-        fprintf(stderr,
-          "\nConvex hull (Selected) option not yet implemented.\n");
+        printf("Number of points (64-bit unsigned int):\n");
+        if (scanf("%lu", &n) != 1) {
+          fprintf(stderr, "\nFailed to parse count.\n");
+          break;
+        }
+
+        all = NULL;
+        for (uint64 i = 0; i < n; i++) {
+          printf("(%lu/%lu) Name (string):\n", i, n);
+          if (scanf("%" STR(NAME_MAXLENGTH) "s", name) != 1) {
+            fprintf(stderr, "\nFailed to parse name.\n");
+            i--;
+            continue;
+          }
+          if ((dp = get_by_name(frame, seed, name)) == NULL)
+            printf("%s not found.\n", name);
+          else
+            all = cons(all, dp);
+        }
+
+        printf("Constructing convex hull from selected points...\n");
+        hull = construct_hull(all);
+        print_convex_hull(hull, stdout);
+        free_list_shallow(all);
+
         break;
       default:
         break;

@@ -2,11 +2,9 @@
 
 #pragma once
 
-#include <stdbool.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include "../util.h"
+
+#include "ll.h"
 
 /*!
  * An AVL tree node.
@@ -24,4 +22,5 @@ typedef struct avl_tree {
 
 avl_tree *insert(avl_tree *node, datum *dp);
 datum *search(avl_tree *node, char name[]);
+linked_list *flatten_tree(avl_tree *root, linked_list *list);
 void free_tree(avl_tree *root);

@@ -4,10 +4,21 @@
 
 #include <ctype.h>
 #include <math.h>
+#include <stdbool.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include <unistd.h>
+
+/*!
+ * Name of output files for non-interactive computations.
+ *
+ * \def OUTPUT_FILENAME
+ */
+#define OUTPUT_FILENAME "output.txt"
 
 /*!
  * Maximum length for the name of a datum.
