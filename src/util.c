@@ -65,3 +65,14 @@ void clear_stream(FILE *fp) {
   char c;
   for (; (c = fgetc(fp)) != '\n' && c != EOF;);
 }
+
+/*!
+ * Swap two elements.
+ *
+ * \param x,y Elements to swap
+ */
+void swap(int64 x, int64 y) {
+  int64 t = x;
+  x = y;
+  y = t;
+}

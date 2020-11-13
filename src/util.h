@@ -14,6 +14,13 @@
 #include <unistd.h>
 
 /*!
+ * End of array marker.
+ *
+ * \def CANARY
+ */
+#define CANARY -1
+
+/*!
  * Name of output files for non-interactive computations.
  *
  * \def OUTPUT_FILENAME
@@ -83,3 +90,4 @@ void print_datum(datum *dp);
 
 int fpeek(FILE *fp);
 void clear_stream(FILE *fp);
+void swap(int64 x, int64 y);

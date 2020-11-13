@@ -75,7 +75,7 @@ int repl(int argc, char *const argv[], int optind) {
   char opt;
   char name[NAME_MAXLENGTH + 1];
   datum *dp;
-  uint64 n;
+  int64 n;
   linked_list *all;
   linked_list *hull;
 
@@ -143,7 +143,7 @@ int repl(int argc, char *const argv[], int optind) {
         }
 
         all = NULL;
-        for (uint64 i = 0; i < n; i++) {
+        for (int64 i = 0; i < n; i++) {
           printf("(%lu/%lu) Name (string):\n", i, n);
           if (scanf("%" STR(NAME_MAXLENGTH) "s", name) != 1) {
             fprintf(stderr, "\nFailed to parse name.\n");

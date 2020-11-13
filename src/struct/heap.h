@@ -4,8 +4,8 @@
 
 #include "../util.h"
 
-datum *build_minheap(datum **data);
+void build_minheap(int64 N, int64 *queue, int64 *tree,
+                   datum **ids, uint64 **graph);
 
-datum **push(datum **data, datum *dp, uint64 key);
-datum *peek(datum **data);
-datum *pop(datum **data);
+datum *pop(int64 N, int64 *queue, int64 *tree,
+           datum **ids, uint64 **graph, int64 index);

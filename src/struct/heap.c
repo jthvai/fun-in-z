@@ -2,40 +2,85 @@
 
 #include "heap.h"
 
-static datum *min_heapify(datum **data, uint64 index);
-static void deckey(datum **data, uint64 index, uint64 key);
-static uint64 parent(uint64 index);
-static uint64 left(uint64 index);
-static uint64 right(uint64 index);
+static void min_heapify(int64 N, int64 *queue, int64 *tree,
+                        datum **ids, uint64 **graph, int64 index);
+static uint64 gen_key(int64 id, int64 *tree,
+                      datum **ids, uint64 **graph);
+
+static int64 left(int64 index);
+static int64 right(int64 index);
 
 /*!
  * Builds a min-heap from an unordered array of data.
  *
- * \param data Array to heapify
+ * \param N Amount of data in queue
+ * \param queue Array to heapify
+ * \param tree Current minimum spanning tree
+ * \param ids Directory to match data to its graph entry
+ * \param graph Graph of all points
  */
-datum *build_minheap(datum **data) {
-  return NULL;
+void build_minheap(int64 N, int64 *queue, int64 *tree,
+                   datum **ids, uint64 **graph) {
+  for (int64 i = N/2 - 1; i >= 0; i--)
+    min_heapify(N, queue, tree, ids, graph, i);
 }
 
 /*!
  * Maintains the min-heap property of a node.
  *
- * \param data Array to heapify
+ * \param N Amount of data in queue
+ * \param queue Array to heapify
+ * \param tree Current minimum spanning tree
+ * \param ids Directory to match data to its graph entry
+ * \param graph Graph of alll points
  * \param index Array index of the node to heapify
- * \return Updated array
  */
-static datum *min_heapify(datum **data, uint64 index) {
-  return NULL;
+static void min_heapify(int64 N, int64 *queue, int64 *tree,
+                        datum **ids, uint64 **graph, int64 index) {
+  int64 l = left(index);
+  int64 r = right(index);
+  int64 larger = index;
+
+  uint64 ikey = gen_key(queue[index], tree, ids, graph);
+  uint64 largekey = ikey;
+  uint64 lkey, rkey;
+
+  if (l < N) {
+    lkey = gen_key(queue[l], tree, ids, graph);
+    larger = lkey > largekey ? l : larger;
+    largekey = larger == l ? lkey : largekey;
+  }
+  if (r < N) {
+    rkey = gen_key(queue[r], tree, ids, graph);
+    larger = rkey > largekey ? r : larger;
+    largekey = larger == r ? rkey : largekey;
+  }
+
+  if (larger != index) {
+    swap(queue[index], queue[larger]);
+    min_heapify(N, queue, tree, ids, graph, larger);
+  }
 }
 
 /*!
- * Computes the parent of the node at a given index.
+ * Generate queue key for a datum.
  *
- * \param index Index of node to compute from
- * \return Index of the parent of the node
+ * \param id ID of datum for which to generate key
+ * \param tree Current minimum spanning tree
+ * \param ids Directory to match data to its graph entry
+ * \param graph Graph of alll points
  */
-static uint64 parent(uint64 index) {
-  return index / 2;
+static uint64 gen_key(int64 id, int64 *tree,
+                      datum **ids, uint64 **graph) {
+  uint64 min = 0;
+
+  if (tree[0] != CANARY)
+    min = graph[id][tree[0]];
+  for (int64 i = 1; tree[i] != CANARY; i++) {
+    min = graph[id][tree[i]] < min ? graph[id][tree[i]] : min;
+  }
+
+  return min;
 }
 
 /*!
@@ -44,7 +89,7 @@ static uint64 parent(uint64 index) {
  * \param index Index of node to compute from
  * \return Index of the left child of the node
  */
-static uint64 left(uint64 index) {
+static int64 left(int64 index) {
   return 2 * index;
 }
 
@@ -54,49 +99,29 @@ static uint64 left(uint64 index) {
  * \param index Index of node to compute from
  * \return Index of the right child of the node
  */
-static uint64 right(uint64 index) {
+static int64 right(int64 index) {
   return 2 * index + 1;
-}
-
-/*!
- * Inserts a datum into the heap.
- *
- * \param data Heap to insert into
- * \param datum Datum to insert
- * \param key Value of the datum
- * \return Updated array
- */
-datum **push(datum **data, datum *dp, uint64 key) {
-  return NULL;
-}
-
-/*!
- * Finds the minimum of the heap without removing it.
- *
- * \param data Heap to search in
- * \return Pointer to the minimum of the heap
- */
-datum *peek(datum **data) {
-  return *data;
 }
 
 /*!
  * Removes and returns the minimum of the heap.
  *
- * \param data Heap to search in
+ * \param N Amount of data in queue
+ * \param queue Array to heapify
+ * \param tree Current minimum spanning tree
+ * \param ids Directory to match data to its graph entry
+ * \param graph Graph of all points
  * \return Pointer to the minimum of the heap
  */
-datum *pop(datum **data) {
-  return *data;
-}
+datum *pop(int64 N, int64 *queue, int64 *tree,
+           datum **ids, uint64 **graph, int64 index) {
+  if (N < 0)
+    return NULL;
 
-/*!
- * Sets the key of a new node to the correct value.
- *
- * \param data Heap traverse
- * \param index Current index of the node
- * \param key Value of the node
- */
-static void deckey(datum **data, uint64 index, uint64 key) {
-  return;
+  datum *m = ids[queue[0]];
+  queue[0] = queue[N - 1];
+
+  min_heapify(N - 1, queue, tree, ids, graph, 0);
+
+  return m;
 }

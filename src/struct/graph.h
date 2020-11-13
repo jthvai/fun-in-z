@@ -2,7 +2,5 @@
 
 #include "../util.h"
 
-datum **parse_inf_graph(datum **idlist, const char *fn,
-                               char *src, char *dest);
-
-uint64 **init_graph(datum *src, datum **idlist);
+uint64 **init_graph(int64 N, datum **idlist);
+void free_graph(uint64 N, uint64 **graph);
