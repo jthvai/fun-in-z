@@ -8,7 +8,7 @@
 #include "../struct/frame.h"
 #include "../struct/ll.h"
 
-int convhull_repl(int argc, char *const argv[], int optind);
+int convhull_cli(int argc, char *const argv[], int optind);
 linked_list *construct_hull(linked_list *all);
 
 void print_convex_hull(linked_list *hull, FILE *fp);

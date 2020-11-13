@@ -5,7 +5,7 @@ obj = $(src:.c=.o)
 
 CC = gcc
 CFLAGS = -O2 -fsanitize=address,undefined -lm \
-				 -Wall -Wextra -Wpedantic -Wno-unused-parameter -Wno-unused-function
+				 -Wall -Wextra -Wpedantic
 LDFLAGS = -fuse-ld=gold -flto
 
 zfun: $(obj)

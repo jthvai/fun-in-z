@@ -42,7 +42,7 @@ int main(int argc, char *const argv[]) {
     case (INTERACTIVE):
       exit(repl(argc, argv, optind));
     case (CONVHULL):
-      exit(convhull_repl(argc, argv, optind));
+      exit(convhull_cli(argc, argv, optind));
     case (MST):
       // !DO
       exit(EXIT_SUCCESS);
@@ -137,14 +137,14 @@ int repl(int argc, char *const argv[], int optind) {
         break;
       case '6':
         printf("Number of points (64-bit unsigned int):\n");
-        if (scanf("%lu", &n) != 1) {
+        if (scanf("%ld", &n) != 1) {
           fprintf(stderr, "\nFailed to parse count.\n");
           break;
         }
 
         all = NULL;
         for (int64 i = 0; i < n; i++) {
-          printf("(%lu/%lu) Name (string):\n", i, n);
+          printf("(%ld/%ld) Name (string):\n", i, n);
           if (scanf("%" STR(NAME_MAXLENGTH) "s", name) != 1) {
             fprintf(stderr, "\nFailed to parse name.\n");
             i--;

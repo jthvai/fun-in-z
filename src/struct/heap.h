@@ -7,5 +7,5 @@
 void build_minheap(int64 N, int64 *queue, int64 *tree,
                    datum **ids, uint64 **graph);
 
-datum *pop(int64 N, int64 *queue, int64 *tree,
-           datum **ids, uint64 **graph, int64 index);
+int64 pop(int64 N, int64 *queue, int64 *tree,
+          datum **ids, uint64 **graph);

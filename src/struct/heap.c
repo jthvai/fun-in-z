@@ -4,8 +4,7 @@
 
 static void min_heapify(int64 N, int64 *queue, int64 *tree,
                         datum **ids, uint64 **graph, int64 index);
-static uint64 gen_key(int64 id, int64 *tree,
-                      datum **ids, uint64 **graph);
+static uint64 gen_key(int64 id, int64 *tree, uint64 **graph);
 
 static int64 left(int64 index);
 static int64 right(int64 index);
@@ -32,7 +31,7 @@ void build_minheap(int64 N, int64 *queue, int64 *tree,
  * \param queue Array to heapify
  * \param tree Current minimum spanning tree
  * \param ids Directory to match data to its graph entry
- * \param graph Graph of alll points
+ * \param graph Graph of all points
  * \param index Array index of the node to heapify
  */
 static void min_heapify(int64 N, int64 *queue, int64 *tree,
@@ -41,17 +40,17 @@ static void min_heapify(int64 N, int64 *queue, int64 *tree,
   int64 r = right(index);
   int64 larger = index;
 
-  uint64 ikey = gen_key(queue[index], tree, ids, graph);
+  uint64 ikey = gen_key(queue[index], tree, graph);
   uint64 largekey = ikey;
   uint64 lkey, rkey;
 
   if (l < N) {
-    lkey = gen_key(queue[l], tree, ids, graph);
+    lkey = gen_key(queue[l], tree, graph);
     larger = lkey > largekey ? l : larger;
     largekey = larger == l ? lkey : largekey;
   }
   if (r < N) {
-    rkey = gen_key(queue[r], tree, ids, graph);
+    rkey = gen_key(queue[r], tree, graph);
     larger = rkey > largekey ? r : larger;
     largekey = larger == r ? rkey : largekey;
   }
@@ -67,11 +66,9 @@ static void min_heapify(int64 N, int64 *queue, int64 *tree,
  *
  * \param id ID of datum for which to generate key
  * \param tree Current minimum spanning tree
- * \param ids Directory to match data to its graph entry
- * \param graph Graph of alll points
+ * \param graph Graph of all points
  */
-static uint64 gen_key(int64 id, int64 *tree,
-                      datum **ids, uint64 **graph) {
+static uint64 gen_key(int64 id, int64 *tree, uint64 **graph) {
   uint64 min = 0;
 
   if (tree[0] != CANARY)
@@ -113,15 +110,15 @@ static int64 right(int64 index) {
  * \param graph Graph of all points
  * \return Pointer to the minimum of the heap
  */
-datum *pop(int64 N, int64 *queue, int64 *tree,
-           datum **ids, uint64 **graph, int64 index) {
+int64 pop(int64 N, int64 *queue, int64 *tree,
+           datum **ids, uint64 **graph) {
   if (N < 0)
-    return NULL;
+    return CANARY;
 
-  datum *m = ids[queue[0]];
+  int64 min = queue[0];
   queue[0] = queue[N - 1];
 
   min_heapify(N - 1, queue, tree, ids, graph, 0);
 
-  return m;
+  return min;
 }

@@ -28,6 +28,15 @@
 #define OUTPUT_FILENAME "output.txt"
 
 /*!
+ * Maximum number of data points.
+ *
+ * Not strictly enforced, but assumed.
+ *
+ * \def MAX_N
+ */
+#define MAX_N 100000005
+
+/*!
  * Maximum length for the name of a datum.
  *
  * \def NAME_MAXLENGTH

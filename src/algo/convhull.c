@@ -22,7 +22,7 @@ static long double left_chain_angle(datum *src, datum *dest);
  * \return `EXIT_SUCCESS` (0) if the function terminated without error,
  *         `EXIT_FAILURE` (1) otherwise
  */
-int convhull_repl(int argc, char *const argv[], int optind) {
+int convhull_cli(int argc, char *const argv[], int optind) {
   linked_list *all = NULL;
   for (int i = optind; i < argc; i++)
     all = parse_inf_ll(all, argv[i]);
@@ -50,6 +50,27 @@ int convhull_repl(int argc, char *const argv[], int optind) {
 }
 
 /*!
+ * Parse the contents of a file, storing into a linked list.
+ *
+ * \param list List to attach data to
+ * \param fn Name of file to parse
+ */
+static linked_list *parse_inf_ll(linked_list *list, const char *fn) {
+  FILE *fp = fopen(fn, "r");
+  if (fp == NULL) {
+    fprintf(stderr, "Failed to open %s\n", fn);
+    return list;
+  }
+
+  datum *dp;
+  while ((dp = read_datum(fp)) != NULL)
+    list = cons(list, dp);
+
+  fclose(fp);
+  return list;
+}
+
+/*!
  * Construct a convex hull.
  *
  * \param all List of points to consider
@@ -69,27 +90,6 @@ linked_list *construct_hull(linked_list *all) {
   }
 
   return left_chain(all, right_chain(all, NULL, bot, top), top, bot);
-}
-
-/*!
- * Parse the contents of a file, storing into a linked list.
- *
- * \param list List to attach data to
- * \param fn Name of file to parse
- */
-static linked_list *parse_inf_ll(linked_list *list, const char *fn) {
-  FILE *fp = fopen(fn, "r");
-  if (fp == NULL) {
-    fprintf(stderr, "Failed to open %s\n", fn);
-    return list;
-  }
-
-  datum *dp;
-  while ((dp = read_datum(fp)) != NULL)
-    list = cons(list, dp);
-
-  fclose(fp);
-  return list;
 }
 
 /*!
