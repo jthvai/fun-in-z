@@ -22,5 +22,7 @@ void add_datum(avl_tree *frame[FRAME_WIDTH][FRAME_WIDTH],
                       const uint32 seed[3], datum *dp);
 
 linked_list *flatten(avl_tree *frame[FRAME_WIDTH][FRAME_WIDTH]);
+int64 flatten_arr(datum **ids, int64 cnt,
+                  avl_tree *frame[FRAME_WIDTH][FRAME_WIDTH]);
 
 void free_forest(avl_tree *frame[FRAME_WIDTH][FRAME_WIDTH]);

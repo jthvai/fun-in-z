@@ -258,6 +258,22 @@ linked_list *flatten_tree(avl_tree *root, linked_list *list) {
 }
 
 /*!
+ * Flatten tree into an array
+ *
+ * \param root Tree to flatten
+ * \param list List to attach onto
+ */
+int64 flatten_tree_arr(datum **ids, int64 cnt, avl_tree *root) {
+  if (root == NULL)
+    return cnt;
+
+  cnt = flatten_tree_arr(ids, flatten_tree_arr(ids, cnt, root->l), root->r);
+  ids[cnt] = root->dp;
+
+  return cnt + 1;
+}
+
+/*!
  * Free memory in use by a tree.
  *
  * \param root Root of tree to free

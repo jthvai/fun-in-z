@@ -3,7 +3,6 @@
 #include "mst.h"
 
 static int64 parse_inf_ids(int64 cnt, datum **ids, const char *fn);
-static void print_mst(int64 N, linked_list **mst, datum **ids, FILE *fp);
 
 static int64 find_edge(int64 id, int64 *tree, uint64 **graph);
 
@@ -20,7 +19,7 @@ int mst_cli(int argc, char *const argv[], int optind) {
   datum **ids = (datum **) calloc(MAX_N, sizeof(datum *));
   int64 cnt = 0;
   for (int i = optind; i < argc && cnt < MAX_N; i++)
-    cnt += parse_inf_ids(cnt, ids, argv[i]);
+    cnt = parse_inf_ids(cnt, ids, argv[i]);
 
   linked_list **mst = construct_mst(cnt, ids);
 
@@ -126,7 +125,7 @@ linked_list **construct_mst(int64 N, datum **ids) {
  * \param ids Array to store into
  * \param fp Stream to print to
  */
-static void print_mst(int64 N, linked_list **mst, datum **ids, FILE *fp) {
+void print_mst(int64 N, linked_list **mst, datum **ids, FILE *fp) {
   for (int64 i = 0; i < N; i++) {
     datum *cur = ids[i];
     for (linked_list *p = mst[i]; p != NULL; p = p->n) {

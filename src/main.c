@@ -44,8 +44,7 @@ int main(int argc, char *const argv[]) {
     case (CONVHULL):
       exit(convhull_cli(argc, argv, optind));
     case (MST):
-      // !DO
-      exit(EXIT_SUCCESS);
+      exit(mst_cli(argc, argv, optind));
   }
 }
 
@@ -76,8 +75,10 @@ int repl(int argc, char *const argv[], int optind) {
   char name[NAME_MAXLENGTH + 1];
   datum *dp;
   int64 n;
+  datum **ids;
   linked_list *all;
   linked_list *hull;
+  linked_list **mst;
 
   char *prompt =
     "\nEnter one digit 0-6.\n\n"
@@ -126,8 +127,51 @@ int repl(int argc, char *const argv[], int optind) {
 
         break;
       case '3':
+        printf("Constructing minimum spanning tree from all points...\n");
+
+        ids = (datum **) calloc(MAX_N, sizeof(datum *));
+        n = 0;
+        n = flatten_arr(ids, n, frame);
+
+        mst = construct_mst(n, ids);
+
+        print_mst(n, mst, ids, stdout);
+
+        free(ids);
+
         break;
       case '4':
+        printf("Number of points (64-bit unsigned int):\n");
+        if (scanf("%ld", &n) != 1) {
+          fprintf(stderr, "\nFailed to parse count.\n");
+          break;
+        }
+
+        ids = (datum **) calloc(n, sizeof(datum *));
+        for (int64 i = 0; i < n; i++) {
+          printf("(%ld/%ld) Name (string):\n", i, n);
+          if (scanf("%" STR(NAME_MAXLENGTH) "s", name) != 1) {
+            fprintf(stderr, "\nFailed to parse name.\n");
+            i--;
+            continue;
+          }
+          if ((dp = get_by_name(frame, seed, name)) == NULL) {
+            printf("%s not found.\n", name);
+            i--;
+          }
+          else {
+            ids[i] = dp;
+          }
+        }
+
+        printf(
+          "Constructing minimum spanning tree from selected points...\n");
+        mst = construct_mst(n, ids);
+
+        print_mst(n, mst, ids, stdout);
+
+        free(ids);
+
         break;
       case '5':
         printf("Constructing convex hull from all points...\n");
@@ -150,10 +194,13 @@ int repl(int argc, char *const argv[], int optind) {
             i--;
             continue;
           }
-          if ((dp = get_by_name(frame, seed, name)) == NULL)
+          if ((dp = get_by_name(frame, seed, name)) == NULL) {
             printf("%s not found.\n", name);
-          else
+            i--;
+          }
+          else {
             all = cons(all, dp);
+          }
         }
 
         printf("Constructing convex hull from selected points...\n");

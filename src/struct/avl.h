@@ -22,5 +22,8 @@ typedef struct avl_tree {
 
 avl_tree *insert(avl_tree *node, datum *dp);
 datum *search(avl_tree *node, char name[]);
+
 linked_list *flatten_tree(avl_tree *root, linked_list *list);
+int64 flatten_tree_arr(datum **ids, int64 cnt, avl_tree *root);
+
 void free_tree(avl_tree *root);

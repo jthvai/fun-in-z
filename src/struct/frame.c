@@ -84,6 +84,24 @@ linked_list *flatten(avl_tree *frame[FRAME_WIDTH][FRAME_WIDTH]) {
 }
 
 /*!
+ * Flatten all data into an array.
+ *
+ * \param ids Array to store into
+ * \param cnt Index of array start
+ * \param frame Frame to flatten
+ */
+int64 flatten_arr(datum **ids, int64 cnt,
+                  avl_tree *frame[FRAME_WIDTH][FRAME_WIDTH]) {
+  for (int8 i = 0; i < FRAME_WIDTH; i++) {
+    for (int8 j = 0; j < FRAME_WIDTH; j++) {
+      cnt = flatten_tree_arr(ids, cnt, frame[i][j]);
+    }
+  }
+
+  return cnt;
+}
+
+/*!
  * Frees memory in use by the frame on the heap.
  *
  * \param frame Frame containing forest to release
