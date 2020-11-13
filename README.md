@@ -17,8 +17,8 @@ If `make` is not installed, manual compilation is possible by issuing the follow
 `bash`.
 
 ```shell
-$ for i in src/**/*.c; do gcc -c -o ${i/.c/.o} $i; done
-$ gcc -o zfun src/**/*.o
+$ for i in src/**/*.c; do gcc -O2 -lm -c -o ${i/.c/.o} $i; done
+$ gcc -fuse-ld=gold -flto -O2 -lm -o zfun src/**/*.o
 ```
 
 Compilation tested on Arch Linux with:
@@ -26,41 +26,41 @@ Compilation tested on Arch Linux with:
 - [GNU Make](https://www.gnu.org/software/make/) 4.3
 - [GCC](http://gcc.gnu.org/) 10.2.0
 - [GNU C Library](https://www.gnu.org/software/libc/) 2.32
+- [GNU gold](https://www.gnu.org/software/binutils/) 1.16
 
-Invoking the compiled binary with no arguments, or `-i` will expose the REPL (incomplete).
+Invoking the compiled binary with no arguments, or `-i` will expose the REPL; note that doing so without specifying
+input files will raise an error. Upon entering the REPL, inputs up to a maximum are loaded into a hash table.
 
 ```shell
-$ ./zfun
+$ ./zfun [files...]
 
 Enter one digit 0-6.
 
-0. Quit
-1. Add point
-2. Retrieve point
-3. Minimum spanning tree (All)
-4. Minimum spanning tree (Selected)
-5. Convex hull (All)
-6. Convex hull (Selected)
+1. Quit
+2. Add point
+3. Retrieve point
+4. Minimum spanning tree (All)
+5. Minimum spanning tree (Selected)
+6. Convex hull (All)
+7. Convex hull (Selected)
 
 >
 
 # Equivalent
-$ ./zfun -i
+$ ./zfun -i [files...]
 ```
 
-Invoking with input files will parse those inputs (incomplete).
+Subsequent instructive prompts will be offered upon interaction with each menu option.
 
-```shell
-$ ./zfun [files...]
-```
-
-Invoking with `-m` activates the command line interface for the minimum spanning tree algorithm (incomplete).
+Invoking with `-m` activates the command line interface for the minimum spanning tree algorithm; it will operate on all
+data points up to a maximum in the inputs. By default, the command line interface will write output to `output.txt`.
 
 ```shell
 $ ./zfun -m [files...]
 ```
 
-Invoking with `-c` activates the command line interface for the convex hull algorithm (incomplete).
+Invoking with `-c` activates the command line interface for the convex hull algorithm; it will operate on all data
+points up to a maximum in the inputs. By default, the command line interface will write output to `output.txt`.
 
 ```shell
 $ ./zfun -c [files...]
