@@ -29,11 +29,11 @@ datum *read_datum(FILE *fp) {
     return NULL;
 
   if (isspace(fpeek(fp))) {
-    if (fscanf(fp, " %d %d", &(dp->x), &(dp->x)) != 2)
+    if (fscanf(fp, " %d %d", &(dp->x), &(dp->y)) != 2)
       return NULL;
   }
   else {
-    if (fscanf(fp, "%*s %d %d", &(dp->x), &(dp->x)) != 2)
+    if (fscanf(fp, "%*s %d %d", &(dp->x), &(dp->y)) != 2)
       return NULL;
   }
 

@@ -121,8 +121,9 @@ static linked_list *right_chain(linked_list *all, linked_list *hull,
   datum *min = NULL;
   long double minangle = 100;
   long double angle;
-  for (linked_list *p = hull; p != NULL; p = p->n) {
+  for (linked_list *p = all; p != NULL; p = p->n) {
     if (min == NULL) min = p->dp;
+    if (p->dp == src) continue;
 
     angle = right_chain_angle(src, p->dp);
     if (angle < minangle) {
@@ -152,8 +153,9 @@ static linked_list *left_chain(linked_list *all, linked_list *hull,
   datum *min = NULL;
   long double minangle = 100;
   long double angle;
-  for (linked_list *p = hull; p != NULL; p = p->n) {
+  for (linked_list *p = all; p != NULL; p = p->n) {
     if (min == NULL) min = p->dp;
+    if (p->dp == src) continue;
 
     angle = left_chain_angle(src, p->dp);
     if (angle < minangle) {
