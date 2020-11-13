@@ -16,13 +16,13 @@
  */
 #define FRAME_WIDTH 64
 
-avl_tree **init_frame();
-void parse_inf_frame(avl_tree **frame, const uint32 seed[],
-                     const char *fn);
-int free_frame(avl_tree **frame);
+// avl_tree ***init_frame();
+void parse_inf_frame(avl_tree *frame[FRAME_WIDTH][FRAME_WIDTH],
+                     const uint32 seed[3], const char *fn);
+void free_forest(avl_tree *frame[FRAME_WIDTH][FRAME_WIDTH]);
 
-datum *get_by_name(avl_tree **frame, const uint32 seed[],
-                          char name[]);
-avl_tree **add_datum(avl_tree **frame, const uint32 seed[],
-                       datum *dp);
-datum **flatten(avl_tree **frame, char *src, char *dest);
+datum *get_by_name(avl_tree *frame[FRAME_WIDTH][FRAME_WIDTH],
+                   const uint32 seed[3], char name[]);
+void add_datum(avl_tree *frame[FRAME_WIDTH][FRAME_WIDTH],
+                      const uint32 seed[3], datum *dp);
+// datum **flatten(avl_tree *frame[FRAME_WIDTH][FRAME_WIDTH], char *src, char *dest);

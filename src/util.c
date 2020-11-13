@@ -21,17 +21,26 @@ void print_datum(datum *dp) {
  * \return Pointer to parsed datum
  */
 datum *read_datum(FILE *fp) {
-  datum *dp = NEW_DATUMP;
+  if (fpeek(fp) == EOF) return NULL;
+
+  datum *dp = (datum *) calloc(1, sizeof(datum));
 
   char fmt[(uint8) floor(log10(NAME_MAXLENGTH)) + 1 + 2 + 1];
   sprintf(fmt, "%%%ds", NAME_MAXLENGTH);
 
-  scanf((const char *) fmt, dp->name);
+  if (scanf((const char *) fmt, dp->name) != 1)
+    return NULL;
 
-  isspace(fpeek(stdin)) ?
-    scanf(" %d %d", &(dp->x), &(dp->x)) :
-    scanf("%*s %d %d", &(dp->x), &(dp->x));
+  if (isspace(fpeek(stdin))) {
+    if (scanf(" %d %d", &(dp->x), &(dp->x)) != 2)
+      return NULL;
+  }
+  else {
+    if (scanf("%*s %d %d", &(dp->x), &(dp->x)) != 2)
+      return NULL;
+  }
 
+  clear_stream(fp);
   return dp;
 }
 
@@ -48,9 +57,11 @@ int fpeek(FILE *fp) {
 }
 
 /*!
- * Reads to the end of the last input from stdin.
+ * Reads to the end of the last input from stream.
+ *
+ * \param fp Stream to clear
  */
-void clear_stdin() {
+void clear_stream(FILE *fp) {
   char c;
-  for (; (c = getchar()) != '\n' && c != EOF;);
+  for (; (c = fgetc(fp)) != '\n' && c != EOF;);
 }

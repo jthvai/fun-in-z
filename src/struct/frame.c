@@ -5,15 +5,6 @@
 static int8 hash(const uint32 s, char c);
 
 /*!
- * Initialises the main data structure.
- *
- * \return Pointer to an AVL matrix -- the frame
- */
-avl_tree **init_frame() {
-  return NULL;
-}
-
-/*!
  * Hashes a single character to an integer 0-63.
  *
  * \param s XOR key
@@ -32,20 +23,27 @@ static int8 hash(const uint32 s, char c) {
  * \param seed Hash key
  * \param fn Name of file to parse
  */
-void parse_inf_frame(avl_tree **frame, const uint32 seed[],
-                     const char *fn) {
-  if (frame == NULL) return;
+void parse_inf_frame(avl_tree *frame[FRAME_WIDTH][FRAME_WIDTH],
+                     const uint32 seed[3], const char *fn) {
+  FILE *fp = fopen(fn, "r");
+
+  datum *dp;
+  while ((dp = read_datum(fp)) != NULL) {
+    add_datum(frame, seed, dp);
+  }
+
+  fclose(fp);
 }
 
 /*!
- * Frees memory in use by the frame.
+ * Frees memory in use by the frame on the heap.
  *
- * \param frame Frame to release
- * \return `EXIT_SUCCESS` (0) if the process terminated without error,
- *         `EXIT_FAILURE` (1) otherwise
+ * \param frame Frame containing forest to release
  */
-int free_frame(avl_tree **frame) {
-  return EXIT_SUCCESS;
+void free_forest(avl_tree *frame[FRAME_WIDTH][FRAME_WIDTH]) {
+  for (int8 i = 0; i < FRAME_WIDTH; i++)
+    for (int8 j = 0; j < FRAME_WIDTH; j++)
+      free_tree(frame[i][j]);
 }
 
 /*!
@@ -57,12 +55,11 @@ int free_frame(avl_tree **frame) {
  * \return Pointer to the datum with the same name if it exists, or NULL if
  *         it could not be found
  */
-datum *get_by_name(avl_tree **frame, const uint32 seed[],
-                          char name[]) {
-  fprintf(stderr, "Retrieve point option not yet implemented.\n");
-  if (frame == NULL) return NULL;
-
-  return NULL;
+datum *get_by_name(avl_tree *frame[FRAME_WIDTH][FRAME_WIDTH],
+                   const uint32 seed[3], char name[]) {
+  uint8 indx = hash(seed[2], name[seed[0]]);
+  uint8 indy = hash(seed[2], name[seed[1]]);
+  return search(frame[indx][indy], name);
 }
 
 /*!
@@ -71,25 +68,10 @@ datum *get_by_name(avl_tree **frame, const uint32 seed[],
  * \param frame Frame to insert into
  * \param seed Hash key
  * \param datum Datum to insert
- * \return Pointer to the updated frame
  */
-avl_tree **add_datum(avl_tree **frame, const uint32 seed[],
-                       datum *dp) {
-  fprintf(stderr, "Add point option not yet implemented.\n");
-  if (frame == NULL) return NULL;
-
-  return NULL;
-}
-
-/*!
- * Stores every datum in the frame into an array.
- *
- * \param frame Frame to flatten
- * \param src Source for Dijkstra
- * \param dest Destination for Dijkstra
- * \return Array of all data, terminated with a NULL, or NULL if `src` or
- *         `dest` could not be found.
- */
-datum **flatten(avl_tree **frame, char *src, char *dest) {
-  return NULL;
+void add_datum(avl_tree *frame[FRAME_WIDTH][FRAME_WIDTH],
+               const uint32 seed[3], datum *dp) {
+  uint8 indx = hash(seed[2], dp->name[seed[0]]);
+  uint8 indy = hash(seed[2], dp->name[seed[1]]);
+  insert(frame[indx][indy], dp);
 }

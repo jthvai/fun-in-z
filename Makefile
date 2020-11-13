@@ -4,10 +4,15 @@ src = $(wildcard src/*/*.c src/*.c)
 obj = $(src:.c=.o)
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Wpedantic -Wno-unused-parameter -Wno-unused-function
+CFLAGS = -O2 -fsanitize=address,undefined \
+				 -Wall -Wextra -Wpedantic -Wno-unused-parameter -Wno-unused-function
+LDFLAGS = -fuse-ld=gold -flto
 
 zfun: $(obj)
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
 clean:
-	rm $(obj)
+	$(RM) $(obj)
+
+CLEAN:
+	$(RM) zfun $(obj)

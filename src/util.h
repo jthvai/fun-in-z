@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <ctype.h>
 #include <math.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -14,6 +15,15 @@
  * \def NAME_MAXLENGTH
  */
 #define NAME_MAXLENGTH 32
+
+/*!
+ * Convert to string.
+ *
+ * \def _STR(s)
+ * \def STR(s)
+ */
+#define _STR(s) #s
+#define STR(s) _STR(s)
 
 /*!
  * Solution to \f$2^{64} > (x - (-x))^2 + (x - (-x))^2\f$.
@@ -57,15 +67,8 @@ typedef struct {
   int32 y;                       /*!< Y coordinate of point */
 } datum;
 
-/*!
- * Pointer to a newly allocated memory for a single datum.
- *
- * \def NEW_DATUMP
- */
-#define NEW_DATUMP (datum *) calloc(1, sizeof(datum))
-
 datum *read_datum(FILE *fp);
 void print_datum(datum *dp);
 
 int fpeek(FILE *fp);
-void clear_stdin();
+void clear_stream(FILE *fp);

@@ -61,18 +61,19 @@ int main(int argc, char *const argv[]) {
  */
 int repl(int argc, char *const argv[], int optind) {
   srand((unsigned) time(NULL));
-  const uint32 seed[] = {(const uint32) rand() % NAME_MAXLENGTH,
-                         (const uint32) rand() % NAME_MAXLENGTH,
-                         (const uint32) rand()};
+  const uint32 seed[3] = {(const uint32) rand() % NAME_MAXLENGTH,
+                          (const uint32) rand() % NAME_MAXLENGTH,
+                          (const uint32) rand()};
 
-  avl_tree **frame = init_frame();
+  avl_tree *frame[FRAME_WIDTH][FRAME_WIDTH];
+  for (int i = 0; i < FRAME_WIDTH; i++)
+    for (int j = 0; j < FRAME_WIDTH; j++)
+      frame[i][j] = NULL;
 
   for (int i = optind; i < argc; i++)
     parse_inf_frame(frame, seed, argv[i]);
 
   char opt;
-  char fmt[(uint8) floor(log10(NAME_MAXLENGTH)) + 1 + 2 + 1];
-  sprintf(fmt, "%%%ds", NAME_MAXLENGTH);
   char name[NAME_MAXLENGTH + 1];
   datum *dp;
 
@@ -91,30 +92,32 @@ int repl(int argc, char *const argv[], int optind) {
     printf("%s", prompt);
 
     opt = getchar();
-    clear_stdin();
+    clear_stream(stdin);
 
     switch (opt) {
       case '0':
         printf("\nQuitting...\n");
-        return free_frame(frame);
+        free_forest(frame);
+        return EXIT_SUCCESS;
       case '1':
         printf(
           "Name (string), X, Y (32-bit signed int), space separated:\n");
-        dp = read_datum(stdin);
-        clear_stdin();
+        if ((dp = read_datum(stdin)) == NULL) {
+          fprintf(stderr, "\nFailed to parse datum.\n");
+          break;
+        }
 
         add_datum(frame, seed, dp);
-        free(dp);
 
         break;
       case '2':
         printf("Name (string):\n");
-        scanf((const char *) fmt, name);
-        clear_stdin();
-        if (name[0] == '\0') break;
+        if (scanf("%" STR(NAME_MAXLENGTH) "s", name) != 1) {
+          fprintf(stderr, "\nFailed to parse name.\n");
+          break;
+        }
 
-        dp = get_by_name(frame, seed, name);
-        if (dp == NULL)
+        if ((dp = get_by_name(frame, seed, name)) == NULL)
           printf("%s not found.\n", name);
         else
           print_datum(dp);
@@ -137,5 +140,6 @@ int repl(int argc, char *const argv[], int optind) {
     }
   } while (opt != EOF);
 
-  return(free_frame(frame));
+  free_forest(frame);
+  return EXIT_SUCCESS;
 }
