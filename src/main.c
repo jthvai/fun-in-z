@@ -2,6 +2,8 @@
 
 #include "main.h"
 
+static int repl(int argc, char *const argv[], int optind);
+
 /*!
  * Main process of the program.
  *
@@ -57,7 +59,7 @@ int main(int argc, char *const argv[]) {
  * \return `EXIT_SUCCESS` (0) if the function terminated without error,
  *         `EXIT_FAILURE` (1) otherwise
  */
-int repl(int argc, char *const argv[], int optind) {
+static int repl(int argc, char *const argv[], int optind) {
   srand((unsigned) time(NULL));
   const uint32 seed[3] = {(const uint32) rand() % NAME_MAXLENGTH,
                           (const uint32) rand() % NAME_MAXLENGTH,

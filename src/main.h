@@ -8,5 +8,3 @@
 
 #include "algo/convhull.h"
 #include "algo/mst.h"
-
-int repl(int argc, char *const argv[], int optind);
