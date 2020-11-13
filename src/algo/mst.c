@@ -36,7 +36,7 @@ int mst_cli(int argc, char *const argv[], int optind) {
     return EXIT_FAILURE;
   }
   else {
-    print_mst(cnt, mst, ids, stdout);
+    print_mst(cnt, mst, ids, outfp);
 
     fclose(outfp);
     for (int64 i = 0; ids[i] != NULL && i < cnt; i++)
@@ -82,21 +82,22 @@ static int64 parse_inf_ids(int64 cnt, datum **ids, const char *fn) {
 linked_list **construct_mst(int64 N, datum **ids) {
   uint64 **graph = init_graph(N, ids);
 
-  int64 *queue = (int64 *) calloc(N, sizeof(int64));
-  for (int64 i = 0; i < N; i++)
-    queue[i] = i;
+  int64 *queue = (int64 *) calloc(N - 1, sizeof(int64));
+  for (int64 i = 1; i < N; i++)
+    queue[i - 1] = i;
 
-  int64 *tree = (int64 *) calloc(N, sizeof(int64));
-  int64 canary = 0;
+  int64 *tree = (int64 *) calloc(N + 1, sizeof(int64));
+  tree[0] = 0;
+  int64 canary = 1;
   tree[canary] = CANARY;
 
-  build_minheap(N, queue, tree, ids, graph);
+  build_minheap(N - 1, queue, tree, ids, graph);
 
   linked_list **mst = (linked_list **) calloc(N, sizeof(linked_list **));
 
   int64 next, dest;
-  for (int64 i = 0; i < N; i++) {
-    next = pop(N, queue, tree, ids, graph);
+  for (int64 i = 1; i < N; i++) {
+    next = pop(N - 1, queue, tree, ids, graph);
     if (next == CANARY)
       break;
 
@@ -133,7 +134,7 @@ void print_mst(int64 N, linked_list **mst, datum **ids, FILE *fp) {
               cur->name, cur->x, cur->y,
               p->dp->name, p->dp->x, p->dp->y);
     }
-    free_list(mst[i]);
+    free_list_shallow(mst[i]);
   }
 
   free(mst);

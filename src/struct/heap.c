@@ -112,7 +112,7 @@ static int64 right(int64 index) {
  */
 int64 pop(int64 N, int64 *queue, int64 *tree,
            datum **ids, uint64 **graph) {
-  if (N < 0)
+  if (N < 1)
     return CANARY;
 
   int64 min = queue[0];

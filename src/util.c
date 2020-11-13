@@ -25,18 +25,15 @@ datum *read_datum(FILE *fp) {
 
   datum *dp = (datum *) calloc(1, sizeof(datum));
 
-  char fmt[(uint8) floor(log10(NAME_MAXLENGTH)) + 1 + 2 + 1];
-  sprintf(fmt, "%%%ds", NAME_MAXLENGTH);
-
-  if (scanf((const char *) fmt, dp->name) != 1)
+  if (fscanf(fp, "%" STR(NAME_MAXLENGTH) "s", dp->name) != 1)
     return NULL;
 
-  if (isspace(fpeek(stdin))) {
-    if (scanf(" %d %d", &(dp->x), &(dp->x)) != 2)
+  if (isspace(fpeek(fp))) {
+    if (fscanf(fp, " %d %d", &(dp->x), &(dp->x)) != 2)
       return NULL;
   }
   else {
-    if (scanf("%*s %d %d", &(dp->x), &(dp->x)) != 2)
+    if (fscanf(fp, "%*s %d %d", &(dp->x), &(dp->x)) != 2)
       return NULL;
   }
 

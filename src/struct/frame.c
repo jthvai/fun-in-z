@@ -65,7 +65,7 @@ void add_datum(avl_tree *frame[FRAME_WIDTH][FRAME_WIDTH],
                const uint32 seed[3], datum *dp) {
   uint8 indx = hash(seed[2], dp->name[seed[0]]);
   uint8 indy = hash(seed[2], dp->name[seed[1]]);
-  insert(frame[indx][indy], dp);
+  frame[indx][indy] = insert(frame[indx][indy], dp);
 }
 
 /*!

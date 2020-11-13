@@ -45,6 +45,9 @@ static avl_tree *make_node(datum *dp) {
  * \return Pointer to the updated tree
  */
 static avl_tree *insert_leaf(avl_tree *root, avl_tree *leaf) {
+  if (root == NULL)
+    return leaf;
+
   int cmp = strcmp(leaf->dp->name, root->dp->name);
 
   if (cmp == 0) {
