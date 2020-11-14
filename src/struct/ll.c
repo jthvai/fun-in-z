@@ -42,8 +42,10 @@ void free_list_shallow(linked_list *list) {
   if (list == NULL)
     return;
 
-  free_list_shallow(list->n);
+  linked_list *n = list->n;
   free(list);
+
+  free_list_shallow(n);
 }
 
 /*!
@@ -55,7 +57,10 @@ void free_list(linked_list *list) {
   if (list == NULL)
     return;
 
-  free_list(list->n);
+  linked_list *n = list->n;
+
   free(list->dp);
   free(list);
+
+  free_list(n);
 }
