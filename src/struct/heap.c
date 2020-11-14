@@ -69,12 +69,12 @@ static void min_heapify(int64 N, int64 *queue, int64 *tree,
  * \param graph Graph of all points
  */
 static uint64 gen_key(int64 id, int64 *tree, uint64 **graph) {
-  uint64 min = 0;
+  uint64 min = 4611686018427387904;
 
   if (tree[0] != CANARY)
     min = graph[id][tree[0]];
   for (int64 i = 1; tree[i] != CANARY; i++) {
-    min = graph[id][tree[i]] < min ? graph[id][tree[i]] : min;
+    min = id != tree[i] && graph[id][tree[i]] < min ? graph[id][tree[i]] : min;
   }
 
   return min;
