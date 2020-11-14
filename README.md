@@ -1,9 +1,9 @@
 <!-- SPDX-License-Identifier: X11 -->
 # Fun in Z
 
-- [Fun in Z](#fun-in-z)
-  - [Usage](#usage)
-  - [License](#license)
+An almost complete jab at a few fun algorithms, written as the final project for ANU's
+[COMP3600](https://cs.anu.edu.au/courses/comp3600/), 2020 S2. As with most of my repos, don't expect it to work. _Do_,
+however, expect it to chew your memory where you mightn't expect :)
 
 ## Usage
 
